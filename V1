@@ -1,0 +1,28 @@
+Tables:
+
+employees(employee_id, name, department_id, hire_date)
+departments(department_id, department_name)
+salaries(employee_id, salary, salary_date)
+Query:
+SELECT 
+    e.employee_id,
+    e.name,
+    d.department_name,
+    s.salary,
+    s.salary_date
+FROM 
+    employees e
+JOIN 
+    departments d ON e.department_id = d.department_id
+JOIN 
+    (SELECT 
+         employee_id, 
+         salary, 
+         salary_date 
+     FROM 
+         salaries 
+     WHERE 
+         salary_date = (SELECT MAX(salary_date) FROM salaries WHERE employee_id = salaries.employee_id)
+    ) s ON e.employee_id = s.employee_id
+ORDER BY 
+    e.employee_id;
